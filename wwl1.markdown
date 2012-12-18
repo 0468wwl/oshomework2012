@@ -48,7 +48,7 @@ class dog{
 	public class equaltion
 {
 
-	public static void main()
+	public static void main(String[] args)
   {
 
 	Integer n1=new Integer(5);
@@ -78,6 +78,49 @@ class dog{
 对于用户自定义的类，其equals()方法的默认行为是比较引用是否相等，要使其比较内容，需在类中重新覆盖该方法。
 
 ###3.抛硬币模拟实验：
+<code>
+	public class coin{
+	
+	private static int count=0;
+	public static void simulation()
+{
+	
+
+	Random rand=new Random(47);
+	boolean flag=false;
+    for(int i=1;i<100;i++)
+{   
+   
+	 flag=rand.nextBoolean();
+    if(flag) count++;
+}
+
+	System.out.println("抛出正面的次数为："+count);
+}
+	
+	public static void main(String[] args)
+{
+
+	simulation();
+}
+
+}	 //output:
+	55
+</code>
+
+利用随机数类Random产生随机boolean型的变量。Random中常用的方法：
+
+<code>
+	nextInt(n) 	产生[0.n]的随机整数。
+	
+nextBoolean()  产生均匀的布尔值
+
+nextLong()  随机long值
+
+nextFlota和nextDouble() 产生[0.0f,1.0f]和[0.0d,1.0d]的随机数值。
+
+	
+	
 
 
 
