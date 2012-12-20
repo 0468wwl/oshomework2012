@@ -1,6 +1,6 @@
   
 #java学习笔记
-##  第三章
+
 ###1.别名机制的演示：
 
 <code>
@@ -118,8 +118,66 @@ nextBoolean()  产生均匀的布尔值
 nextLong()  随机long值
 
 nextFlota和nextDouble() 产生[0.0f,1.0f]和[0.0d,1.0d]的随机数值。
+</code>
 
+###5.类的初始化
+<code>
+	public class initlize
+
+{
+
+	char ch;
+	String s;
+  	int a=5;
+  	float t=1.0f;
+	initlize(float t){this.t=t;}
+  	 public void print()
+ {
+
+	System.out.println("ch="+ch);
+    System.out.println("s="+s);
+	System.out.println("a="+a);	
+	System.out.println("t="+t);
+}
+	public static void main(String[] args)
+{
+
+	initlize  init=new initlize(5.0f);
+    init.print();
+}
+
+}
+</code>
+//结果:
+
+	ch=0
+	s=null
+	a=5
+	t=5.0
+初始化顺序：默认初始化，指定初始化，构造器初始化。
+    
+
+###枚举类型enum
+<code>
+	 enum Day
+
+{ Monday,Tuesday,Wednesday,Thursday,Friday }
+
+	public class Workday
+
+{
 	
+	static Day day=Day.Monday;
+ 	public static void main(String[] args)
+{
+	
+	System.out.println(day);
+}
+
+}
+//结果：Monday
+
+enum 关键字用于产生枚举类型。
 	
 
 
