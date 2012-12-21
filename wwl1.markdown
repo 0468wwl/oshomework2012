@@ -177,7 +177,57 @@ nextFlota和nextDouble() 产生[0.0f,1.0f]和[0.0d,1.0d]的随机数值。
 }
 //结果：Monday
 
-enum 关键字用于产生枚举类型。
+enum 关键字用于产生枚举类型（枚举为整型常量）。
+
+
+
+###7.可变参数列表
+	class A{}
+	public class Varargs {
+	public  static void print1(Object... args) {
+		for(Object obj:args)
+			System.out.println("obj:"+obj);
+			System.out.println();
+		}
+	public static void print2(Object[] args){
+		for(Object obj:args)
+			System.out.println("obj:"+obj);
+			System.out.println();
+		}
+	
+	public static void main(String[] args){
+		print1(5,"hello",'A',2.11d,1.1f,new var());
+		System.out.println();
+		print1(new Object[]{5,'a',"haha",new var()});
+		System.out.println();
+		print2(new Object[]{10,'b',"xixi",new var()});
+		/!print2(5,"hello",'A',2.11d,1.1f,new var());
+	
+		}
+}
+
+	//output:
+	obj:5
+	obj:hello
+	obj:A
+	obj:2.11
+	obj:1.1
+	obj:p1.var@c17164
+
+	obj:5
+	obj:a
+	obj:haha
+	obj:p1.var@1fb8ee3
+
+	obj:10
+	obj:b
+	obj:xixi
+	obj:p1.var@61de33
+
+Object[]可解析为Object类型，但Object类型不能被解析为Object类型。
+
+
+
 	
 
 
