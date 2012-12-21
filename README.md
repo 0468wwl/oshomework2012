@@ -10,7 +10,7 @@
  
 ###2.列表例子：
 
-—操作系统
+—操作系统[http://](http://)
 
 —数据库
 
@@ -19,11 +19,7 @@
 ###3.链接例子：
 我的[微博](http://weibo.com/2794272534/profile)
 
-可爱滴[侄子侄女](C:\Users\dell\Pictures\动漫&其它)
-
-
-
-###代码例子：
+![](http://localhost:8080/project.jpg)
 
 
 
