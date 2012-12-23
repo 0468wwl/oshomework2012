@@ -224,7 +224,144 @@ enum 关键字用于产生枚举类型（枚举为整型常量）。
 	obj:xixi
 	obj:p1.var@61de33
 
-Object[]可解析为Object类型，但Object类型不能被解析为Object类型。
+Object[]可解析为Object类型，但Object[]类型不能被解析为Object类型。
+
+###8."工厂":
+
+###9.向上转型。
+<code>
+
+	import static net.mindview.util.Print.*;
+    enum Note{ Dou,Ran,Me,Fa,Sou;}
+
+	class Instrument{
+	public static void tune(Instrument i)
+
+{
+	
+	i.play(Note.Ran);
+}
+
+	public void play(Note n)
+{
+	 
+	print("Instrument play:"+n);	
+}
+
+}
+	
+	class Brass extends Instrument{
+
+	public void play(Note n){
+		print("Brass play:"+n);
+	}
+}
+	
+	class Stringed extends Instrument
+{
+
+	public static void tune(Stringed s){
+		s.play(Note.Sou);
+	}
+	public  void play(Note n){
+		print("Stringed play:"+n);
+	}
+}
+	
+	public class music {
+
+    public static void main(String[] args){
+
+	   Instrument horn=new Brass();
+	   Instrument voiln=new Stringed();
+	   Brass horn2=new Brass();
+		/！Stringed horn3=new Brass();	//类型不匹配。
+		Stringed voiln2=new Stringed();
+       Instrument.tune(horn);
+	   Instrument.tune(voiln);
+	   Stringed.tune(horn);            //
+	   Stringed.tune(horn2);
+	   Stringed.tune(voiln2);
+   }
+
+}//结果：
+
+	Brass play:Ran
+	Stringed play:Ran
+	Brass play:Ran
+	Brass play:Ran
+	Stringed play:Sou
+Brass与Stringed继承自Instrument,向上转型为基类Instrument.在实际调用中通过公共接口tune()调用的是导出类中覆盖了的play()方法。将一个方法调用与一个方法主体关联起来叫做绑定，绑定分为前期绑定（编译时期绑定，除static,final和private方法外的所有）和后期绑定（运行时确定）。Imstrument.tune()接口展示了多态。
+
+###10.构造器和多态
+	class meal
+{  
+	
+	meal(){
+	print("meal()");  }
+}
+	
+	class bread
+{
+	
+	bread(){
+	print("bread()");  }
+}
+	
+	class lunch extends meal
+{
+	
+	lunch(){
+	print("lunch()");  }
+}
+
+	class chess{
+		chess(){
+			print("chess()");
+		}
+	}
+
+	
+	class goodlunch extends lunch
+{
+
+	goodlunch(){
+	print("goodlunch()");   }
+}
+
+	public class sandwich extends goodlunch
+{
+
+	private bread b=new bread();
+    private chess c=new chess();
+	sandwich(){
+	print("sandwich()");   
+}
+
+
+	public static void main(String[] args)
+{
+
+	sandwich sw=new sandwich();
+}
+
+}//结果：
+
+	meal()
+	lunch()
+	goodlunch()
+	bread()
+	chess()
+	sandwich()
+初始化顺序：基类构造器  导出类数据成员  导出类构造器主体
+           
+
+
+	
+	
+	
+
+	
 
 
 
