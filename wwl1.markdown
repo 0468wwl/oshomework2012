@@ -356,6 +356,69 @@ Brass与Stringed继承自Instrument,向上转型为基类Instrument.在实际调
 初始化顺序：基类构造器  导出类数据成员  导出类构造器主体
            
 
+	###11.用继承进行设计
+####一条通用的原则：用继承表达行为间的差异，用字段表达状态上的变化。
+<code>
+	
+	import static net.mindview.util.Print.*;
+	class Status{
+	void action(int speed){
+		speed=0;
+		print(speed);
+	}
+}
+
+//使用继承实现行为的差异。
+
+	class Boot extends Status{
+	void action(int speed){
+		speed=speed+20;
+		print(speed);
+	}
+	
+}
+
+	class ChangeSpeed extends Status{
+	void action(int speed){
+		speed=speed-5;
+		print(speed);
+	}
+}
+
+	class  Stop extends Status{
+	void action(int speed){
+	speed=speed-19;
+	print(speed);
+	}
+}
+
+//使用组合（字段）表达状态上的变化。
+
+	class AlertStatus{
+
+	private Status sta=new Status();
+	public void changeboot(){sta=new Boot();}
+	public void changespeed(){ sta=new ChangeSpeed();}
+	public void changestop(){ sta=new Stop();}
+		public  void play(){ sta.action(0);}
+	}
+
+	public class Startship {
+
+	public static void main(String[] args) {
+		AlertStatus sta=new AlertStatus();
+		sta.play();
+		sta.changeboot();
+		sta.play();
+		sta.changespeed();
+		sta.play();
+		sta.changestop();
+		sta.play();
+		
+	}
+
+}
+
 
 	
 	
