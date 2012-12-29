@@ -356,7 +356,7 @@ Brass与Stringed继承自Instrument,向上转型为基类Instrument.在实际调
 初始化顺序：基类构造器  导出类数据成员  导出类构造器主体
            
 
-	###11.用继承进行设计
+###11.用继承进行设计
 ####一条通用的原则：用继承表达行为间的差异，用字段表达状态上的变化。
 <code>
 	
@@ -417,7 +417,225 @@ Brass与Stringed继承自Instrument,向上转型为基类Instrument.在实际调
 		
 	}
 
+}//output
+
+	0
+	20
+	-5
+	-19
+
+###12.完全解耦
+如果一个方法操作的是类而非接口，那么只能使用这个类及其子类，此方法不适用与不在此继承结构中的其它类，这样方法的复用性降低，就像下面的Apply.process()一样。
+
+	import java.util.Arrays;
+	import static net.mindview.util.Print.*;
+	class Processor{
+	public String name(){
+		return getClass().getSimpleName();
+	}
+	Object process(Object input){
+		return input;
+	}
 }
+
+	class Upcase extends Processor{
+	String process(Object input){
+		return ((String)input).toUpperCase();
+	}
+}
+	
+	class Splitter extends Processor{
+	String process(Object input){
+		return Arrays.toString(((String)input).split(" "));
+	}
+}
+
+	public class Apply {
+    public static void process(Processor p,Object s){
+    	print("当前调用的类型为："+p.name());
+    	print(p.process(s));
+    }
+    public static String s="hello,java jes5!";
+    public static void main(String[] args){
+    	process(new Upcase(),s);
+    	process(new Splitter(),s);
+    	
+    }
+}//output
+	
+	当前调用的类型为：Upcase
+	HELLO,JAVA JES5!
+	当前调用的类型为：Splitter
+	[hello,java, jes5!]
+Apply.process()使用了策略设计模式（方法根据传递的对象参数不同而具体执行不同的行为）。
+
+如果有不在Process继承结构中的某类Filters：
+	
+	class wareform{ }
+	
+
+	class Filters{
+	public String name(){
+		return getClass().getSimpleName();
+	}
+	public wareform process(wareform input){
+		return input;
+	}
+}
+
+	class Highpass extends Filters{
+		double cutoff;
+		Highpass(double cutoff){this.cutoff=cutoff;}
+		public wareform process(wareform input){
+		return input;
+	}
+}
+
+//Apply.process()方法无法适用于Filters类。
+
+如果把Processor设计成接口，让Apply.process()操作接口，并适配Filters类，让它成为Apply.process()所能接受的类型，其代码便可复用，像下面这样；
+	
+	interface Processor{
+	String name();
+	Object process(Object input);  //把Processor设计成接口。
+}
+
+ 	public class FiltersAdapter implements Processor     //适配Filters类。
+{           
+         
+		 Filters filter;
+          public FiltersAdapter(Filters filter){      //使用代理。
+        	  this.filter=filter;
+          }
+          public String name(){
+        	  return filter.name();
+        	  }
+          public wareform process(Object input){
+        	  return filter.process((wareform)input);
+        	  
+          }
+          public static void main(String[] args){
+        	  wareform w=new wareform();
+        	  Apply.process(new FiltersAdapter(new Highpass(2.0)), w);   //代码复用。
+          }
+}
+
+###13.适配接口
+知识点：
+	
+	Scanner类实现了Iterator接口: class Scanner implement Iterator<String> 
+	其构造器之一接受的是一个Readable接口：Scanner(Readable resource){}
+    Readable接口是专为Scanner而设计的：interface  Readable{Read(CharBuff cb);}
+	若想使用Scanner输入自定义的新类，只需要让该类implements Readable接口中的read()方法即可。
+	Charbuff为输入源缓冲区，缓冲区空时返回-1.
+
+
+	import java.nio.*;
+	import java.util.*;
+
+	class randsentence implements Readable{
+
+	public static Random rand=new Random(47);
+	public static final char[] first="寂拣面做".toCharArray();
+	public static final char[] second="寞尽朝个".toCharArray();
+	public static final char[] third="沙寒大幸".toCharArray();
+	public static final char[] forth="洲枝海福".toCharArray();
+	public static final char[] fitth="冷不春勇".toCharArray();
+	public static final char[] sixth="冷肯花敢".toCharArray();
+	public static final char[] seventh="，栖开的".toCharArray();
+	private int count;
+
+	public randsentence(int count){
+		this.count=count;
+	}
+	public int read(CharBuffer cb){
+		if(count--==0)  
+			return -1;
+		//cb.append(first[rand.nextInt(first.length)]);
+		
+		for(int i=0;i<4;i++){
+			cb.append(first[i]);
+			cb.append(second[i]);
+			cb.append(third[i]);
+			cb.append(forth[i]);
+			cb.append(fitth[i]);
+		   cb.append(sixth[i]);
+		   cb.append(seventh[i]);
+		  
+		}
+		
+		return 1;
+}
+
+}
+	
+	public class Makepoem {
+	
+		public static void main(String[] args){
+		Scanner s=new Scanner(new randsentence(1));
+		
+		System.out.println(s.next());
+	}
+	
+	}//output
+	寂寞沙洲冷冷，拣尽寒枝不肯栖面朝大海春花开做个幸福勇敢的    //程序有误，待改进。
+
+
+创建一个类，它可以产生char随机序列，适配这个类，使其成为Scanner一种输入对象。
+	
+	import java.nio.CharBuffer;
+	import java.util.*;
+
+	class RandomChars {
+		private static Random rand = new Random();
+		public char next() {
+		return (char)rand.nextInt(110);       //产生随机char序列。
+		}
+		public static void main(String[] args) {			
+			RandomChars rc = new RandomChars();
+		for(int i = 0; i < 10; i++)
+				System.out.print(rc.next() + " ");
+		}
+	 }
+
+//适配类，使其能被Scanner读取。
+	
+	public class AdapterRandcharSquence extends RandomChars implements Readable
+{
+	
+	private int count;
+	public AdapterRandcharSquence(int count){
+		this.count = count;
+	}			
+	public int read(CharBuffer cb)
+{
+
+		if(count-- == 0)
+			return -1;
+		String result = Character.toString(next()) + " ";
+		cb.append(result);
+		return result.length();
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner s = new Scanner(new AdapterRandcharSquence(10));
+		while(s.hasNext())
+			System.out.println(s.next() + " ");
+	}
+
+}//output
+
+	+ 
+	0 
+	? 
+	+ 
+	7 
+	P 
+	4 
+	; 
+	4 
+	j 
 
 
 	
