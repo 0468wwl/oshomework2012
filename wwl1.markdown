@@ -157,7 +157,7 @@ nextFlota和nextDouble() 产生[0.0f,1.0f]和[0.0d,1.0d]的随机数值。
 初始化顺序：默认初始化，指定初始化，构造器初始化。
     
 
-###枚举类型enum
+###6.枚举类型enum
 <code>
 	 enum Day
 
@@ -226,7 +226,190 @@ enum 关键字用于产生枚举类型（枚举为整型常量）。
 
 Object[]可解析为Object类型，但Object[]类型不能被解析为Object类型。
 
-###8."工厂":
+###8."工厂"与内部类。
+（1）创建一个接Cycle接口及其Unicycle,Bicycle,Tricycle的实现，对每种类型的Cycle都创     建相应的工厂，然后编写代码使用这些工厂。
+	
+	import static net.mindview.util.Print.*;
+//对象接口
+
+	interface Cycle
+{
+	
+	void run();
+	void count();
+}
+
+//对象工厂接口
+
+	interface Cyclemake{
+	Cycle getCycle();
+	}
+
+
+//具体实现
+
+	class Unicycle implements  Cycle
+{
+	
+	private int wheels;
+	private float speed;
+	String name="fun";
+
+	public void run(){
+		speed=10;
+	}
+
+	public void count(){
+		wheels=1;
+		print("Unicle has one wheel");
+	}
+}
+
+	class UnicycleFactory implements Cyclemake
+{
+	
+	public Cycle getCycle(){
+		return new Unicycle();
+	}
+}
+
+	class Bicycle implements Cycle{
+	private int wheels;
+	private float speed;
+	String name="small bee";
+	public void run(){
+		speed=20;
+	}
+	public void count(){
+		wheels=2;
+		print("Bicycle has two wheels");
+	}
+}
+class BicycleFactory implements Cyclemake{
+	public Cycle getCycle(){
+		return new Bicycle();
+	}
+	
+}
+	
+	
+	class Tricycle implements Cycle{
+	private int wheels;
+	private float speed;
+	String name="handsome";
+
+	public void run(){
+		speed=25;
+	}
+	
+	public void count(){
+		wheels=3;
+		print("Bicycle has three wheels");
+	}
+}
+
+	class TricycleFactory implements Cyclemake
+{
+		
+		public Cycle getCycle(){
+		return new Tricycle();
+	}
+}
+
+
+	public class Vircle {
+	public static void CycleFactory(Cyclemake make){
+		Cycle cy=make.getCycle();
+		cy.run();
+		cy.count();
+		
+	}
+     public static void main(String[] args){
+    	 CycleFactory(new UnicycleFactory());
+    	 CycleFactory(new BicycleFactory());
+    	 CycleFactory(new TricycleFactory());
+     }
+}//output
+
+	Unicle has one wheel
+	Bicycle has two wheels
+	Bicycle has three wheels
+
+(2)使用工厂方法创建一个框架，它可以执行抛硬币和掷骰子的功能，使用内部类实现对象工厂的功能。
+
+	import java.util.*;
+	import static net.mindview.util.Print.*;
+	
+	interface Game{
+	int throwing();
+}
+
+	interface Gamemake
+{
+	
+	Game Gameget();
+		
+	}
+
+	class coin implements Game
+{
+	
+	Random rand=new Random();
+	public int throwing(){
+		boolean tf=rand.nextBoolean();
+		int outcome;
+		if(tf) {
+			//outcome=1;
+			return outcome=1;
+		}
+		else return outcome=0;	
+	}
+	
+	public static Gamemake gm=new Gamemake(){
+		public Game Gameget(){
+			return new coin();
+		}
+	};
+}
+
+
+	class Dice implements Game
+{
+	
+	Random rand=new Random();
+	int pot[]={1,2,3,4,5,6};
+
+	public int throwing(){
+		int i=rand.nextInt(6);
+		return pot[i];
+		
+	}
+	
+	public static Gamemake gm=new Gamemake(){
+		public Game Gameget(){
+			return new Dice();
+		}
+	};
+}
+
+
+	public class Factorys {
+	public static void producer(Gamemake gm){
+		Game ga=gm.Gameget();
+		print(ga.throwing());
+		
+	}
+  
+	 public static void main(String[] args){
+	   producer(coin.gm);
+	   producer(Dice.gm);
+   }
+}//output(其中一种情况）
+
+	1	
+	3
+	
+
 
 ###9.向上转型。
 <code>
