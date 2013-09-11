@@ -17,7 +17,7 @@
 —java         //换行空两格。
 
 ###3.链接例子：
-我的[微博](http://weibo.com/2794272534/profile)
+我的[微博]
 
 ![](http://localhost:8080/project.jpg)
 
